@@ -27,6 +27,7 @@ logger.info(`📚 Swagger disponível em http://localhost:${PORT}/api-docs/`);
 app.post('/events', eventController.ingestEvent);
 app.get('/events', eventController.getAllEvents);
 app.post('/events/:id/replay', eventController.replayEvent);
+app.get('/worker/health', eventController.getWorkerHealth);
 
 // Health Check
 app.get('/health', (req, res) => {
