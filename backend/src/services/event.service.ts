@@ -149,7 +149,14 @@ class EventService {
 
   async getAllEvents() {
     try {
-      const events = await prisma.event.findMany()
+      const events = await prisma.event.findMany({
+        include: {
+          logs: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
 
       return events
     } catch (error) {

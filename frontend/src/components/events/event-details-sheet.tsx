@@ -21,6 +21,7 @@ interface Props {
 }
 
 export function EventDetailsSheet({ event, open, onOpenChange }: Props) {
+  console.log(event);
   const queryClient = useQueryClient();
 
   const replayMutation = useMutation({
@@ -56,45 +57,46 @@ export function EventDetailsSheet({ event, open, onOpenChange }: Props) {
         </SheetHeader>
 
         <ScrollArea className="flex-1 -mx-6 px-6 py-4">
-          <div className="space-y-6">
+          <div className="space-y-2">
             
             {/* Payload Viewer */}
-            <div>
+            <div className="p-4">
               <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
                 <Activity className="w-4 h-4" /> Payload Data
               </h3>
               <div className="bg-slate-950 text-slate-50 p-4 rounded-md font-mono text-xs overflow-x-auto">
-                <pre>{JSON.stringify(event.payload, null, 2)}</pre>
+                <pre className="break-all whitespace-pre-wrap">{JSON.stringify(event.payload, null, 2)}</pre>
               </div>
             </div>
 
             <Separator />
 
-            {/* Timeline de Logs */}
-            <div>
-              <h3 className="text-sm font-medium mb-3">Processing Timeline</h3>
-              <div className="border-l-2 border-slate-200 dark:border-slate-800 ml-2 space-y-4 pl-4 pb-2">
+            <div className="p-4">
+              <h3 className="text-sm font-medium mb-2">Logs de Processamento</h3>
+              
+              <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2">
                 {event.logs?.map((log) => (
-                  <div key={log.id} className="relative">
-                    {/* Bolinha da timeline */}
-                    <div className={`absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full ${
-                      log.level === 'ERROR' ? 'bg-red-500' : 
-                      log.level === 'WARN' ? 'bg-yellow-500' : 'bg-blue-500'
+                  <div key={log.id} className="flex items-start text-sm gap-2 p-1.5 rounded-md hover:bg-muted/50 transition-colors">
+                    {/* Timestamp */}
+                    <span className="font-mono text-xs text-muted-foreground shrink-0 mt-0.5">
+                      {format(new Date(log.createdAt), 'HH:mm:ss')}
+                    </span>
+
+                    {/* Separador Colorido */}
+                    <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${
+                        log.level === 'ERROR' ? 'bg-red-500' : 
+                        log.level === 'WARN' ? 'bg-yellow-500' : 'bg-blue-500'
                     }`} />
-                    
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-muted-foreground">
-                        {format(new Date(log.createdAt), 'HH:mm:ss.SSS')}
-                      </span>
-                      <p className={`text-sm ${log.level === 'ERROR' ? 'text-red-600 font-medium' : ''}`}>
-                        {log.message}
-                      </p>
-                    </div>
+
+                    {/* Mensagem */}
+                    <span className={`text-xs leading-relaxed ${log.level === 'ERROR' ? 'text-red-600' : 'text-foreground'}`}>
+                      {log.message}
+                    </span>
                   </div>
                 ))}
-                
-                {event.logs?.length === 0 && (
-                  <p className="text-sm text-muted-foreground italic">No logs available.</p>
+
+                {(!event.logs || event.logs.length === 0) && (
+                  <span className="text-xs text-muted-foreground">Sem logs registrados.</span>
                 )}
               </div>
             </div>
