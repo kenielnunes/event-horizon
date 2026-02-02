@@ -22,7 +22,7 @@ class EventService {
     await prisma.event.update({
       where: { id: eventId },
       data: { 
-        status: 'PROCESSING',
+        status: EventStatus.PROCESSING,
         logs: { create: { level: Level.INFO, message: 'Processamento iniciado' } }
       }
     });
@@ -56,7 +56,7 @@ class EventService {
             data: {
               eventId,
               level: Level.INFO,
-              message: `Rule ${rule.id} applied. Action executed.`
+              message: `Regra ${rule.id} aplicada. Ação executada.`
             }
           });
         }
@@ -65,7 +65,7 @@ class EventService {
       await prisma.event.update({
         where: { id: eventId },
         data: { 
-          status: 'PROCESSED',
+          status: EventStatus.PROCESSED,
           updatedAt: new Date(),
           logs: { 
             create: { 
@@ -84,7 +84,7 @@ class EventService {
       await prisma.event.update({
         where: { id: eventId },
         data: { 
-          status: 'FAILED',
+          status: EventStatus.FAILED,
           logs: { 
             create: { 
               level: Level.ERROR, 
@@ -104,9 +104,9 @@ class EventService {
         externalId,
         type,
         payload: payload ?? {}, // Garante que não seja undefined
-        status: 'RECEIVED',
+        status: EventStatus.RECEIVED,
         logs: {
-          create: { level: 'INFO', message: existing ? 'Duplicado: Evento recebido' : 'Evento recebido' }
+          create: { level: Level.INFO, message: existing ? 'Duplicado: Evento recebido' : 'Evento recebido' }
         }
       }
     });
