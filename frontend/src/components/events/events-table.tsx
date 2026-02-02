@@ -41,8 +41,8 @@ export function EventTable() {
             <TableRow>
               <TableHead>Status</TableHead>
               <TableHead>External ID</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Attempts</TableHead>
+              <TableHead>Tipo</TableHead>
+              <TableHead>Tentativas</TableHead>
               <TableHead className="text-right">Timestamp</TableHead>
               <TableHead></TableHead> {/* Ações */}
             </TableRow>
@@ -50,7 +50,7 @@ export function EventTable() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10">Loading stream...</TableCell>
+                <TableCell colSpan={6} className="text-center py-10">Carregando stream...</TableCell>
               </TableRow>
             ) : events?.map((event) => (
               <TableRow key={event.id}>
@@ -64,7 +64,7 @@ export function EventTable() {
                   {format(new Date(event.createdAt), 'HH:mm:ss')}
                 </TableCell>
                 <TableCell>
-                  <Button onClick={() => setSelectedEvent(event as EventDetails)} variant="ghost" size="sm">Details</Button>
+                  <Button onClick={() => setSelectedEvent(event as EventDetails)} variant="ghost" size="sm">Detalhes</Button>
                 </TableCell>
               </TableRow>
             ))}
