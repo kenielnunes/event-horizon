@@ -1,22 +1,27 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 import { eventController } from './controllers/event.controller';
 import { logger } from './lib/logger';
 import { prisma } from './lib/prisma';
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors()); 
-
 app.use(express.json());
 
-// Middleware de Log de Requisições (Observabilidade)
+app.use('/api-docs', swaggerUi.serve);
+app.use('/api-docs', swaggerUi.setup(swaggerSpec));
+
+// Middleware de Log
 app.use((req, res, next) => {
   logger.http(`${req.method} ${req.url}`, { ip: req.ip });
   next();
 });
+
+logger.info(`📚 Swagger disponível em http://localhost:${PORT}/api-docs/`);
 
 // Rotas
 app.post('/events', eventController.ingestEvent);
